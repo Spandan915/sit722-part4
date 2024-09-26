@@ -1,1 +1,44 @@
-# Your Solution
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-catalog
+  labels:
+    app: book-catalog
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: book-catalog
+  template:
+    metadata:
+      labels:
+        app: book-catalog
+    spec:
+      containers:
+        - name: book-catalog
+          image: ./book-catalog:latest
+          ports:
+            - containerPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-management
+  labels:
+    app: inventory-management
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: inventory-management
+  template:
+    metadata:
+      labels:
+        app: inventory-management
+    spec:
+      containers:
+        - name: inventory-management
+          image: ./inventory-management:latest
+          ports:
+            - containerPort: 8000
