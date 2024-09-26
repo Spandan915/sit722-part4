@@ -1,1 +1,42 @@
-# Your Solution
+version: '3.8'
+
+services:
+  book-catalog:
+    image: ./book-catalog:latest
+    container_name: book-catalog
+    ports:
+      - "8001:8000"  # Mapping the container's port 8000 to host's port 8001
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/book_catalog_db
+    depends_on:
+      - db
+    networks:
+      - microservice-network
+
+  inventory-management:
+    image: ./inventory-management:latest
+    container_name: inventory-management
+    ports:
+      - "8002:8000"  # Mapping the container's port 8000 to host's port 8002
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/inventory_management_db
+    depends_on:
+      - db
+    networks:
+      - microservice-network
+
+  db:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: book_catalog_db
+    ports:
+      - "5432:5432"
+    networks:
+      - microservice-network
+
+networks:
+  microservice-network:
+    driver: bridge
